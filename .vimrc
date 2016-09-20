@@ -20,7 +20,8 @@ Plugin 'Raimondi/delimitMate'
 Plugin 'scrooloose/syntastic'
 Plugin 'shougo/unite.vim'
 Plugin 'racer-rust/vim-racer'
-Plugin 'cybeliak/vim-plugin-minibufexpl'
+"Plugin 'cybeliak/vim-plugin-minibufexpl'
+Plugin 'fholgado/minibufexpl.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'kana/vim-submode'
 Plugin 'pbrisbin/vim-mkdir'
@@ -46,7 +47,7 @@ set wildignore=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,
 set hlsearch
 set incsearch
 set lazyredraw
-
+set number
 "" Text
 """""""
 set encoding=utf8
