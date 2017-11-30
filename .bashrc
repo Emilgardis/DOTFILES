@@ -20,8 +20,8 @@ fi
 export EDITOR=vim
 export CC=gcc
 
-alias ls='ls --color=auto'
-alias la='ls --color=auto -a'
+alias ls='exa -G'
+alias la='exa -Ga'
 alias lx='exa'
 alias lg='exa --git --long'
 # lsa
@@ -31,7 +31,7 @@ alias vdir='ls --color=always --format=long'
 
 # some more ls aliases
 alias ll='ls --color=auto -lhX'
-alias la='ls --color=auto -A'
+#alias la='ls --color=auto -A'
 alias ldir='ls --color=auto -lhA |grep --color=never ^d'
 alias lfiles='ls --color=auto -lhA |grep ^-'
 #alias l='ls -CF'
@@ -46,6 +46,7 @@ alias pss='ps -ef | grep $1'
 alias ducks='ls -A --color=auto | grep -v -e '\''^\.\.$'\'' |xargs -i du -ks {} |sort -rn |head -16 | awk '\''{print $2}'\'' | xargs -i
  du -hs {}'
 
+alias open='xdg-open'
 
 alias '?'='echo $?'
 # ' Fixes formatting bug
@@ -91,17 +92,22 @@ shopt -s autocd
 # Correct tab complete off-by-one mistakes
 shopt -s dirspell
 
+shopt -s globstar
+
 # Rust things.
-export RUST_SRC_PATH=/home/localsys/src/rust/src
+export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 export RUST_NEW_ERROR_FORMAT=true
 export CARGO_HOME=/home/localsys/.cargo/
+## rust-lldb doesn't work atm. Make a temporary override of rust-lldb
+# alias rust-lldb="/home/localsys/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/etc/rust-lldb"
 # Evic things
 export EVICSDK=/home/localsys/projects/evic-sdk
 export EVICSDKTC=/home/localsys/projects/evic-sdk-tc
 alias upload="evic-usb upload"
-
-
 alias xxd="xxd -u -c10 -g1"
+
+# Make pacman have color
+alias pacman="pacman --color=auto"
 # Set up "eat", AUR and pacman manager
 eat () {
     if [[ $1 == '--noconfirm' ]]; then
@@ -125,7 +131,7 @@ eat () {
                 echo "$HOSTNAME: Installing package '$package'..."
                 sudo pacman -S $package
             fi
-        else
+    else
             echo 'Not found.'
         fi
         if [[ -z $result || $feedback == 'a' ]]; then
@@ -152,6 +158,12 @@ alias rmx='\rm'
 alias rm='echo nej du inte rm '
 alias yes='echo jaaaa'
 alias car='clear; cargo run'
+alias gisl='git smart-log'
+alias gipu='git pull'
+alias gist='git status'
+alias gich='git checkout'
+alias _vim='\vim'
+alias vim='nvim'
 # --- Load Liquidprompt
 [[ $- = *i* ]] && source liquidprompt
 

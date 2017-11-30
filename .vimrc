@@ -16,16 +16,21 @@ Plugin 'drmikehenry/vim-fixkey'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'shougo/neocomplete.vim'
 Plugin 'rust-lang/rust.vim'
+" Plugin 'ervandew/matchem'
 Plugin 'Raimondi/delimitMate'
 Plugin 'scrooloose/syntastic'
 Plugin 'shougo/unite.vim'
 Plugin 'racer-rust/vim-racer'
-"Plugin 'cybeliak/vim-plugin-minibufexpl'
+" Plugin 'cybeliak/vim-plugin-minibufexpl'
 Plugin 'fholgado/minibufexpl.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'kana/vim-submode'
 Plugin 'pbrisbin/vim-mkdir'
 Plugin 'scrooloose/nerdtree'
+Plugin 'gioele/vim-autoswap.git'
+Plugin 'toml-lang/toml'
+Plugin 'cespare/vim-toml'
+Plugin 'maralla/vim-toml-enhance'
 call vundle#end()
 "" Vundle
 """""""""
@@ -154,6 +159,11 @@ nmap <M-up> mz:m-2<cr>`z
 vmap <M-down> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-up> :m'<-2<cr>`>my`<mzgv`yo`z
 
+" Wierd file extensions
+augroup filetypedetect
+    au BufRead,BufNewFile *html.tera setfiletype html
+    " associate *.html.tera with html÷ filetype
+augroup END
 " Neocomplete
 """""""""""""
 let g:neocomplete#enable_at_startup = 1
@@ -168,9 +178,10 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " Rust config
 """""""""""""
 let g:racer_cmd = "/home/localsys/.cargo/bin/racer"
-"let $RUST_SRC_PATH="/home/localsys/src/rust/src"
+let g:rust_src_path= $RUST_SRC_PATH
 let g:ftplugin_rust_source_path = "/home/localsys/src/rust"
-let g:ycm_rust_src_path="/home/localsys/src/rust/src"
+let g:ycm_rust_src_path= $RUST_SRC_PATH
+let g:racer_experimental_completer = 1 "enable experimental racer, supprt for function types etc.
 
 " YCM off for Python and C, Neocomplete on.
 let g:ycm_filetype_blacklist = {
@@ -198,3 +209,10 @@ nmap <silent> <F2> :NERDTreeFind<CR>
 
 " Close with last buffer
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" Better tmux support
+" enable tmux mouse support
+if exists('$TMUX') 
+    set ttymouse=xterm2
+endif
+
