@@ -131,7 +131,8 @@ autocmd BufReadPost *
      \ endif
 " Remember info about open buffers on close
 """""""""""""""""""""""""""""""""""""""""""
-set viminfo^=%
+" viminfo deprecated, use shada instead
+"set viminfo^=%
 
 " NERDTree
 """"""""""
