@@ -77,7 +77,7 @@ function update-x11-forwarding
 }
 
 
-PATH=$PATH:/home/localsys/.local/bin:/home/localsys/.cargo/bin:/home/localsys/.gem/ruby/2.3.0/bin:/home/localsys/.cargo:/home/localsys/.cargo/bin
+PATH=$PATH:/home/localsys/.local/bin:/home/localsys/.cargo/bin:/home/localsys/.gem/ruby/2.5.0/bin:/home/localsys/.cargo:/home/localsys/.cargo/bin
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:$(rustc --print sysroot)/lib
 # Use correct winsize
 shopt -s checkwinsize
