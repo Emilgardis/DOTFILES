@@ -10,14 +10,18 @@ call plug#begin()
 
 
 """"""" Completion
-"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'roxma/nvim-completion-manager'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Plug 'roxma/nvim-completion-manager' ncm is rip, https://github.com/roxma/nvim-completion-manager/issues/12#issuecomment-382334422
 " Neosnippet provides the [ ] in completion
 " I want to remove this somehow
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-surround'
+" cpsm completion NOTE: boost needed
+Plug 'nixprime/cpsm', {
+    \ 'do': 'bash install.sh',
+    \ }
 """"""" File man | UI
 " NERDTree
 Plug 'scrooloose/nerdtree'
@@ -38,7 +42,10 @@ Plug 'sjl/badwolf'
 " No clue what has to be setup
 "Plug 'neomake/neomake'
 """"""" Languages
-Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'PY3=ON bash install.sh',
+    \ }
 """" Rust
 " Rust syntax
 Plug 'rust-lang/rust.vim'
@@ -46,9 +53,22 @@ Plug 'rust-lang/rust.vim'
 Plug 'racer-rust/vim-racer'
 " racer for ncm
 Plug 'roxma/nvim-cm-racer'
+"parinfer for rust, "smart edit"
+Plug 'eraserhd/parinfer-rust'
 " 
 call plug#end()
 colorscheme badwolf
+" Deoplete
+""""""""""""""""""""""""""""""""""""""""""""""""" 
+" start deoplete
+let g:deoplete#enable_at_startup = 1
+" Disable the candidates in Comment/String syntaxes.
+"call deoplete#custom#source('_',
+            "\ 'disabled_syntaxes', ['Comment', 'String'])
+" autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+call deoplete#custom#source('_', 'matchers', ['matcher_cpsm'])
+"set delay
+call deoplete#custom#option('auto_complete_delay', 200)
 " RLS
 set hidden
 let mapleader=","
@@ -58,7 +78,6 @@ let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
     \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
     \ }
-
 " Automatically start language servers.
 let g:LanguageClient_autoStart = 1
 
