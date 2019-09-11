@@ -10,12 +10,17 @@ call plug#begin()
 
 
 """"""" Completion
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"Plug 'roxma/nvim-completion-manager' ncm is rip, https://github.com/roxma/nvim-completion-manager/issues/12#issuecomment-382334422
+"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Doesn't seem to work with snippets and LCN, see https://github.com/autozimu/LanguageClient-neovim/issues/379
+"Plug 'roxma/nvim-completion-manager' "ncm is rip, https://github.com/roxma/nvim-completion-manager/issues/12#issuecomment-382334422
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2-ultisnips'
 " Neosnippet provides the [ ] in completion
 " I want to remove this somehow
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+" Note: neosnippet has a nasty bug with lcn
+"Plug 'Shougo/neosnippet.vim'
+"Plug 'Shougo/neosnippet-snippets'
+Plug 'SirVer/ultisnips'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-surround'
 " cpsm completion NOTE: boost needed
@@ -25,6 +30,9 @@ Plug 'nixprime/cpsm', {
 """"""" File man | UI
 " NERDTree
 Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+" Defx seems nice but setup is a pain...
+"Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 " Multi-entry selection UI.
 Plug 'junegunn/fzf'
 " Showing function signature and inline doc.
@@ -35,6 +43,9 @@ Plug 'airblade/vim-gitgutter'
 "Plug 'Shougo/denite.nvim'
 " Airline
 Plug 'vim-airline/vim-airline'
+""""""" Swap/ Utility
+" autoswap
+Plug 'gioele/vim-autoswap'
 """"""" Theme
 " Badwolf
 Plug 'sjl/badwolf'
@@ -52,28 +63,41 @@ Plug 'rust-lang/rust.vim'
 " Racer
 Plug 'racer-rust/vim-racer'
 " racer for ncm
-Plug 'roxma/nvim-cm-racer'
-"parinfer for rust, "smart edit"
+Plug 'ncm2/ncm2-racer'
+""""""""" Lisp
+"parinfer in rust, "smart edit"
 Plug 'eraserhd/parinfer-rust'
-" 
+"""" Tmux / Screen
+Plug 'ervandew/screen'
+" Fancy icons
+" takes a lot of gbs
+Plug 'ryanoasis/vim-devicons'
+" Better nvim terminal
+Plug 'mklabs/split-term.vim'
 call plug#end()
 colorscheme badwolf
 " Deoplete
 """"""""""""""""""""""""""""""""""""""""""""""""" 
 " start deoplete
-let g:deoplete#enable_at_startup = 1
+"let g:deoplete#enable_at_startup = 1
 " Disable the candidates in Comment/String syntaxes.
 "call deoplete#custom#source('_',
             "\ 'disabled_syntaxes', ['Comment', 'String'])
 " autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-call deoplete#custom#source('_', 'matchers', ['matcher_cpsm'])
+"call deoplete#custom#source('_', 'matchers', ['matcher_cpsm'])
 "set delay
-call deoplete#custom#option('auto_complete_delay', 200)
-" RLS
+"call deoplete#custom#option('auto_complete_delay', 200)
+"""""""""""" ncm2
+" enable ncm2 for all buffers
+autocmd BufEnter * call ncm2#enable_for_buffer()
+" IMPORTANTE: :help Ncm2PopupOpen for more information
+set completeopt=noinsert,menuone,noselect
+
 set hidden
 let mapleader=","
 set number
 set mouse=a
+"""""""" RLS
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
     \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
@@ -152,7 +176,6 @@ autocmd BufReadPost *
 """""""""""""""""""""""""""""""""""""""""""
 " viminfo deprecated, use shada instead
 "set viminfo^=%
-
 " NERDTree
 """"""""""
 " Load on open, kinda annoying.
@@ -170,14 +193,32 @@ nmap <silent> <F2> :NERDTreeFind<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " neosnippet
-imap <c-j>	<Plug>(neosnippet_expand_or_jump)
-vmap <c-j>	<Plug>(neosnippet_expand_or_jump)
-inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
-vmap <c-u>	<Plug>(neosnippet_expand_target)
-let g:neosnippet#enable_completed_snippet=1
+"imap <c-j>	<Plug>(neosnippet_expand_or_jump)
+"vmap <c-j>	<Plug>(neosnippet_expand_or_jump)
+"inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
+"vmap <c-u>	<Plug>(neosnippet_expand_target)
+"let g:neosnippet#enable_completed_snippet=1
+"" ultisnips
+
+" Press enter key to trigger snippet expansion
+" The parameters are the same as `:help feedkeys()`
+inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+
+" c-j c-k for moving in snippet
+" let g:UltiSnipsExpandTrigger		= "<Plug>(ultisnips_expand)"
+let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
+let g:UltiSnipsRemoveSelectModeMappings = 0
+
+" deoplete
 "let g:deoplete#enable_at_startup = 1
 
 " delimitMate
 au FileType rust let b:delimitMate_balance_matchpairs = 1
 au FileType rust let b:delimitMate_expand_cr = 1
 au FileType python,rust let b:delimitMate_nesting_quotes = ['"']
+" ScreenShell settings
+let g:ScreenImpl = 'Tmux'
+" split-term settings
+set splitbelow
+
